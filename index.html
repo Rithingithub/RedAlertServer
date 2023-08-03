@@ -1,0 +1,64 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Map Display</title>
+    <style>
+        /* Set the height of the map container */
+        #map {
+            height: 400px;
+            width: 100%;
+        }
+    </style>
+</head>
+<body>
+    <!-- Map container -->
+    <div id="map"></div>
+
+    <!-- Load the Google Maps API -->
+    <script src="https://maps.googleapis.com/maps/api/js?key=YOUR_GOOGLE_MAPS_API_KEY&callback=initMap" async defer></script>
+
+    <script>
+        // Initialize the map
+        function initMap() {
+            // Default coordinates (change to match your initial location)
+            var initialCoords = { lat: 0, lng: 0 };
+
+            // Create the map
+            var map = new google.maps.Map(document.getElementById('map'), {
+                zoom: 14,
+                center: initialCoords // Center the map on the initial coordinates
+            });
+
+            // Function to add a marker to the map
+            function addMarker(location) {
+                var marker = new google.maps.Marker({
+                    position: location,
+                    map: map
+                });
+            }
+
+            // Function to update the map with new coordinates from the Android app
+            function updateMap(latitude, longitude) {
+                var newCoords = { lat: latitude, lng: longitude };
+
+                // Remove existing markers (if any)
+                map.setZoom(14);
+                map.panTo(newCoords);
+
+                // Add a marker for the new location
+                addMarker(newCoords);
+            }
+
+            // Call the updateMap function with your received latitude and longitude
+            // Replace the following with your actual JavaScript code to receive the coordinates from the Android app
+            // You can use a WebSocket or Server-Sent Events to receive real-time updates
+            // For this example, we'll simulate a location update after 2 seconds
+            setTimeout(function() {
+                var newLatitude = 37.7749; // Replace with your latitude
+                var newLongitude = -122.4194; // Replace with your longitude
+                updateMap(newLatitude, newLongitude);
+            }, 2000);
+        }
+    </script>
+</body>
+</html>
