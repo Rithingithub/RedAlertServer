@@ -50,7 +50,18 @@ app.post('/api/location', (req, res) => {
 });
 
 // Define the API endpoint to fetch location data
-
+app.get('/api/location', (req, res) => {
+  // Fetch all location data from the database
+  Location.find({}, (err, locations) => {
+    if (err) {
+      console.error(err);
+      res.sendStatus(500);
+    } else {
+      // Send the location data as a JSON response
+      res.json(locations);
+    }
+  });
+});
 
 // Start the server
 app.listen(port, () => {
