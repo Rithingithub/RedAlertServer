@@ -1,13 +1,11 @@
 const express = require('express');
-const bodyParser = require('body-parser');
 const mongoose = require('mongoose');
 const cors = require('cors');
-
 const app = express();
-const port = 3000; // Change this to your desired port
+const port = 3000;
 
 // Connect to MongoDB
-mongoose.connect('mongodb://127.0.0.1:27017/redalert', {
+mongoose.connect('mongodb://127.0.0.1:27017/redalert11', {
   useNewUrlParser: true,
   useUnifiedTopology: true,
 });
@@ -21,47 +19,11 @@ db.once('open', () => {
 app.use(cors());
 
 // Parse incoming JSON data
-app.use(bodyParser.json());
+app.use(express.json());
 
-// Define the Location model
-const locationSchema = new mongoose.Schema({
-  latitude: Number,
-  longitude: Number,
-  timestamp: Date,
-});
-const Location = mongoose.model('Location', locationSchema);
-
-// Define the API endpoint to receive location data
-app.post('/api/location', (req, res) => {
-  const { latitude, longitude } = req.body;
-  const newLocation = new Location({
-    latitude,
-    longitude,
-    timestamp: new Date(),
-  });
-  newLocation.save()
-    .then(() => {
-      res.sendStatus(200);
-    })
-    .catch((error) => {
-      console.error(error);
-      res.sendStatus(500);
-    });
-});
-
-// Define the API endpoint to fetch location data
-app.get('/api/location', (req, res) => {
-  // Fetch all location data from the database
-  Location.find({}, (err, locations) => {
-    if (err) {
-      console.error(err);
-      res.sendStatus(500);
-    } else {
-      // Send the location data as a JSON response
-      res.json(locations);
-    }
-  });
-});
+// Import and use routes
+const locationRouter = require('./router/locationRouter');
+app.use('/api/location', locationRouter);
 
 // Start the server
 app.listen(port, () => {
